@@ -1,0 +1,11 @@
+
+(compile -s -O2 -d1 sfml.scm -j sfml -lcsfml-graphics)
+(compile -s sfml.import.scm -O2 -d0)
+(compile -c -O2 -d1 sfml.scm -unit sfml -j sfml)
+
+(install-extension
+  'sfml
+  '("sfml.o" "sfml.so" "sfml.import.so")
+  '((version 0.1)
+    (static "sfml")))
+

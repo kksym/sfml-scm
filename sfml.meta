@@ -1,0 +1,11 @@
+(
+
+(license "BSD")
+(category graphics)
+
+(needs foreign)
+
+(author "Kyle K")
+(synopsis "Chicken Scheme bindings for the SFML library (http://www.sfml-dev.org)")
+
+)
