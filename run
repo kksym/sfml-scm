@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sudo chicken-install
+csc test.scm
+./test

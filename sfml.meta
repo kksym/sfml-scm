@@ -1,6 +1,5 @@
 (
 
-(license "BSD")
 (category graphics)
 
 (needs foreign)

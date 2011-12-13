@@ -9,7 +9,7 @@ Run `chicken-install` in the project base directory.
 Dependencies
 ------------
  - [SFML](https://github.com/LaurentGomila/SFML)
- - [CSFML](https://github.com/LaurentGomila/CSFML).
+ - [CSFML](https://github.com/LaurentGomila/CSFML)
 
 Please note that this library will not work with SFML 1.6, you must have 2.0+.
 

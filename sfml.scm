@@ -1,7 +1,4 @@
 ;; sfml.scm
-;;
-;; COMPILE WITH
-;; csc sfml.scm -lcsfml-graphics
 
 (module sfml (
 	      sf-default-style
