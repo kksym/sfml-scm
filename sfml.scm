@@ -29,6 +29,12 @@
 	      sf-event-create
 	      sf-event-closed?
 	      sf-event-key-pressed?
+          sf-event-key-ctrl?
+          sf-event-key-alt?
+          sf-event-key-system?
+          sf-event-key-shift?
+          sf-event-key?
+          sf-key-A
 	      )
   (import scheme chicken foreign)
 
@@ -134,6 +140,31 @@ EOF
     "if (event->Type == sfEvtKeyPressed)
          C_return(1);
      C_return(0);") event))))
+
+(define (sf-event-key-ctrl? event)
+  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
+     "return ((int)event->Key.Control);") event))))
+
+(define (sf-event-key-alt? event)
+  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
+     "return ((int)event->Key.Alt);") event))))
+
+(define (sf-event-key-shift? event)
+  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
+     "return ((int)event->Key.Shift);") event))))
+
+(define (sf-event-key-system? event)
+  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
+     "return ((int)event->Key.System);") event))))
+
+(define sf-key-A
+  (foreign-value "sfKeyA" int))
+
+(define (sf-event-key? event key)
+  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event) (int key))
+     "if (event->Key.Code == key)
+          C_return(1);
+      C_return(0);") event key))))
 
 #|(define sf-color-create
   (foreign-lambda* (c-pointer sfColor)

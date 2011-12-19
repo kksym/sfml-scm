@@ -13,7 +13,11 @@
 	    ((sf-event-closed? event)
 	     (sf-render-window-close window))
 	    ((sf-event-key-pressed? event)
-	     (print "Key Pressed!")))
+	     (cond
+           ((sf-event-key-ctrl? event) (print "control pressed"))
+           ((sf-event-key-alt? event) (print "alt pressed"))
+           ((sf-event-key? event sf-key-A) (print "A pressed"))
+           (else (print "key pressed")))))
 	  (poll-loop)))
       (sf-render-window-clear window 0 255 255 0)
       (sf-render-window-draw-sprite window sprite)
