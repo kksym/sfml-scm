@@ -1,71 +1,71 @@
 ;; sfml.scm
 
 (module sfml (
-	      sf-default-style
-	      sf-render-window-create
-	      sf-render-window-destroy
+              sf-default-style
+              sf-render-window-create
+              sf-render-window-destroy
+              
+              sf-texture-create-from-file
+              sf-texture-destroy
+              
+              sf-sprite-create
+              sf-sprite-set-texture
+              sf-sprite-set-x
+              sf-sprite-set-y
+              sf-sprite-get-x
+              sf-sprite-get-y
+              sf-sprite-get-width
+              sf-sprite-get-height
+              sf-sprite-destroy
 
-	      sf-texture-create-from-file
-	      sf-texture-destroy
+              sf-render-window-clear
+              sf-render-window-draw-sprite
+              sf-render-window-display
+              sf-render-window-poll-event
+              sf-render-window-is-opened
+              sf-render-window-close
 
-	      sf-sprite-create
-	      sf-sprite-set-texture
-          sf-sprite-set-x
-          sf-sprite-set-y
-          sf-sprite-get-x
-          sf-sprite-get-y
-          sf-sprite-get-width
-          sf-sprite-get-height
-	      sf-sprite-destroy
+              #|sf-color-create
+              sf-black
+              sf-white
+              sf-red
+              sf-green
+              sf-blue
+              sf-yellow
+              sf-magenta
+              sf-cyan|#
 
-	      sf-render-window-clear
-	      sf-render-window-draw-sprite
-	      sf-render-window-display
-	      sf-render-window-poll-event
-	      sf-render-window-is-opened
-	      sf-render-window-close
+              sf-event-create
+              sf-event-closed?
 
-	      #|sf-color-create
-	      sf-black
-	      sf-white
-	      sf-red
-	      sf-green
-	      sf-blue
-	      sf-yellow
-	      sf-magenta
-	      sf-cyan|#
+              sf-event-key-pressed?
+              sf-event-key-ctrl?
+              sf-event-key-alt?
+              sf-event-key-system?
+              sf-event-key-shift?
+              sf-event-key?
 
-	      sf-event-create
-	      sf-event-closed?
+              sf-key-A sf-key-B sf-key-C sf-key-D
+              sf-key-E sf-key-F sf-key-G sf-key-H
+              sf-key-I sf-key-J sf-key-K sf-key-L
+              sf-key-M sf-key-N sf-key-O sf-key-P
+              sf-key-Q sf-key-R sf-key-S sf-key-T
+              sf-key-U sf-key-V sf-key-W sf-key-X
+              sf-key-Y sf-key-Z
 
-	      sf-event-key-pressed?
-          sf-event-key-ctrl?
-          sf-event-key-alt?
-          sf-event-key-system?
-          sf-event-key-shift?
-          sf-event-key?
+              sf-key-num1 sf-key-num2 sf-key-num3
+              sf-key-num4 sf-key-num5 sf-key-num6
+              sf-key-num7 sf-key-num8 sf-key-num9
+              sf-key-num0
 
-          sf-key-A sf-key-B sf-key-C sf-key-D
-          sf-key-E sf-key-F sf-key-G sf-key-H
-          sf-key-I sf-key-J sf-key-K sf-key-L
-          sf-key-M sf-key-N sf-key-O sf-key-P
-          sf-key-Q sf-key-R sf-key-S sf-key-T
-          sf-key-U sf-key-V sf-key-W sf-key-X
-          sf-key-Y sf-key-Z
+              sf-key-left sf-key-right
+              sf-key-up sf-key-down
 
-          sf-key-num1 sf-key-num2 sf-key-num3
-          sf-key-num4 sf-key-num5 sf-key-num6
-          sf-key-num7 sf-key-num8 sf-key-num9
-          sf-key-num0
-
-          sf-key-left sf-key-right
-          sf-key-up sf-key-down
-
-          sf-key-escape
-          sf-key-lctrl sf-key-rctrl
-          sf-key-lshift sf-key-rshift
-          sf-key-lalt sf-key-ralt
-          sf-key-lsystem sf-key-rsystem
+              sf-key-escape
+              sf-key-lctrl sf-key-rctrl
+              sf-key-lshift sf-key-rshift
+              sf-key-lalt sf-key-ralt
+              sf-key-lsystem sf-key-rsystem
 
 	      )
   (import scheme chicken foreign)
