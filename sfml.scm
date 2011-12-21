@@ -44,12 +44,24 @@
           sf-key-U sf-key-V sf-key-W sf-key-X
           sf-key-Y sf-key-Z
 
+          sf-key-num1 sf-key-num2 sf-key-num3
+          sf-key-num4 sf-key-num5 sf-key-num6
+          sf-key-num7 sf-key-num8 sf-key-num9
+          sf-key-num0
+
+          sf-key-left sf-key-right
+          sf-key-up sf-key-down
+
+          sf-key-escape
+          sf-key-lctrl sf-key-rctrl
+          sf-key-lshift sf-key-rshift
+          sf-key-lalt sf-key-ralt
+          sf-key-lsystem sf-key-rsystem
+
 	      )
   (import scheme chicken foreign)
 
 (foreign-declare #<<EOF
-
-#include <stdio.h>
 
 #include <SFML/Window.h>
 #include <SFML/Graphics.h>
@@ -156,15 +168,21 @@ EOF
 
 (define (sf-event-key-alt? event)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
-     "return ((int)event->Key.Alt);") event))))
+     "C_return((int)event->Key.Alt);") event))))
 
 (define (sf-event-key-shift? event)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
-     "return ((int)event->Key.Shift);") event))))
+     "C_return((int)event->Key.Shift);") event))))
 
 (define (sf-event-key-system? event)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
-     "return ((int)event->Key.System);") event))))
+     "C_return((int)event->Key.System);") event))))
+
+(define (sf-event-key? event key)
+  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event) (int key))
+     "if (event->Key.Code == key)
+          C_return(1);
+      C_return(0);") event key))))
 
 (define-syntax define-key
   (syntax-rules ()
@@ -199,15 +217,34 @@ EOF
 (define-key sf-key-Y "sfKeyY")
 (define-key sf-key-Z "sfKeyZ")
 
+(define-key sf-key-num0 "sfKeyNum0")
+(define-key sf-key-num1 "sfKeyNum1")
+(define-key sf-key-num2 "sfKeyNum2")
+(define-key sf-key-num3 "sfKeyNum3")
+(define-key sf-key-num4 "sfKeyNum4")
+(define-key sf-key-num5 "sfKeyNum5")
+(define-key sf-key-num6 "sfKeyNum6")
+(define-key sf-key-num7 "sfKeyNum7")
+(define-key sf-key-num8 "sfKeyNum8")
+(define-key sf-key-num9 "sfKeyNum9")
+
+(define-key sf-key-escape "sfKeyEscape")
+(define-key sf-key-lctrl "sfKeyLControl")
+(define-key sf-key-lshift "sfKeyLShift")
+(define-key sf-key-lalt "sfKeyLAlt")
+(define-key sf-key-lsystem "sfKeyLSystem")
+(define-key sf-key-rctrl "sfKeyRControl")
+(define-key sf-key-rshift "sfKeyRShift")
+(define-key sf-key-ralt "sfKeyRAlt")
+(define-key sf-key-rsystem "sfKeyRSystem")
+
+(define-key sf-key-left "sfKeyLeft")
+(define-key sf-key-right "sfKeyRight")
+(define-key sf-key-up "sfKeyUp")
+(define-key sf-key-down "sfKeyDown")
 
 ;(define sf-key-A
  ; (foreign-value "sfKeyA" int))
-
-(define (sf-event-key? event key)
-  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event) (int key))
-     "if (event->Key.Code == key)
-          C_return(1);
-      C_return(0);") event key))))
 
 #|(define sf-color-create
   (foreign-lambda* (c-pointer sfColor)
