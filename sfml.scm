@@ -4,11 +4,20 @@
 	      sf-default-style
 	      sf-render-window-create
 	      sf-render-window-destroy
+
 	      sf-texture-create-from-file
 	      sf-texture-destroy
+
 	      sf-sprite-create
 	      sf-sprite-set-texture
+          sf-sprite-set-x
+          sf-sprite-set-y
+          sf-sprite-get-x
+          sf-sprite-get-y
+          sf-sprite-get-width
+          sf-sprite-get-height
 	      sf-sprite-destroy
+
 	      sf-render-window-clear
 	      sf-render-window-draw-sprite
 	      sf-render-window-display
@@ -108,6 +117,30 @@ EOF
   (foreign-lambda
     void "sfSprite_SetTexture" (c-pointer sfSprite) (c-pointer sfTexture) int))
 
+(define sf-sprite-set-x
+  (foreign-lambda
+    void "sfSprite_SetX" (c-pointer sfSprite) float))
+
+(define sf-sprite-set-y
+  (foreign-lambda
+    void "sfSprite_SetY" (c-pointer sfSprite) float))
+
+(define sf-sprite-get-x
+  (foreign-lambda
+    float "sfSprite_GetX" (c-pointer sfSprite)))
+
+(define sf-sprite-get-y
+  (foreign-lambda
+    float "sfSprite_GetY" (c-pointer sfSprite)))
+
+(define sf-sprite-get-width
+  (foreign-lambda
+    float "sfSprite_GetWidth" (c-pointer sfSprite)))
+
+(define sf-sprite-get-height
+  (foreign-lambda
+    float "sfSprite_GetHeight" (c-pointer sfSprite)))
+
 (define sf-sprite-destroy
   (foreign-lambda
     void "sfSprite_Destroy" (c-pointer sfSprite)))
@@ -164,7 +197,7 @@ EOF
 
 (define (sf-event-key-ctrl? event)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
-     "return ((int)event->Key.Control);") event))))
+     "C_return((int)event->Key.Control);") event))))
 
 (define (sf-event-key-alt? event)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
