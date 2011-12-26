@@ -74,6 +74,7 @@
               sf-clock-reset
               sf-clock-destroy
 
+              sf-sleep
 	      )
   (import scheme chicken foreign)
 

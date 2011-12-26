@@ -1,5 +1,5 @@
 
-(compile -s -O2 -d1 sfml.scm -j sfml -lcsfml-graphics)
+(compile -s -O2 -d1 sfml.scm -j sfml -lcsfml-graphics -lcsfml-system)
 (compile -s sfml.import.scm -O2 -d0)
 (compile -c -O2 -d1 sfml.scm -unit sfml -j sfml)
 
