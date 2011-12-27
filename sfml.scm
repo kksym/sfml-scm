@@ -17,6 +17,8 @@
               sf-sprite-get-width
               sf-sprite-get-height
               sf-sprite-destroy
+              sf-sprite-move
+              sf-sprite-rotate
 
               sf-render-window-clear
               sf-render-window-draw-sprite
@@ -67,11 +69,17 @@
               sf-key-lalt sf-key-ralt
               sf-key-lsystem sf-key-rsystem
 
+              sf-clock-create
+              sf-clock-get-time
+              sf-clock-reset
+              sf-clock-destroy
+
 	      )
   (import scheme chicken foreign)
 
 (foreign-declare #<<EOF
 
+#include <SFML/System.h>
 #include <SFML/Window.h>
 #include <SFML/Graphics.h>
 
@@ -85,6 +93,7 @@ EOF
 (define-foreign-type sfEvent "sfEvent" '())
 (define-foreign-type sfIntRect "sfIntRect" '())
 (define-foreign-type sfColor "sfColor" '())
+(define-foreign-type sfClock "sfClock" '())
 
 ;(define-foreign-variable sf-default-style unsigned-integer64 "sfDefaultStyle")
 
@@ -144,6 +153,14 @@ EOF
 (define sf-sprite-destroy
   (foreign-lambda
     void "sfSprite_Destroy" (c-pointer sfSprite)))
+
+(define sf-sprite-move
+  (foreign-lambda
+    void "sfSprite_Move" (c-pointer sfSprite) float float))
+
+(define sf-sprite-rotate
+  (foreign-lambda
+    void "sfSprite_Rotate" (c-pointer sfSprite) float))
 
 #|(define sf-render-window-clear
   (foreign-lambda* void
@@ -211,6 +228,14 @@ EOF
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
      "C_return((int)event->Key.System);") event))))
 
+; i probably could (and should) do something like
+; (case (sf-event-key event)
+;   ((sf-key-A)
+;    (print "a pressed"))
+;   ((sf-key-Z)
+;    (when (sf-event-key-ctrl? event)
+;      (print "control-z pressed"))))
+
 (define (sf-event-key? event key)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event) (int key))
      "if (event->Key.Code == key)
@@ -276,9 +301,6 @@ EOF
 (define-key sf-key-up "sfKeyUp")
 (define-key sf-key-down "sfKeyDown")
 
-;(define sf-key-A
- ; (foreign-value "sfKeyA" int))
-
 #|(define sf-color-create
   (foreign-lambda* (c-pointer sfColor)
     ((int r) (int g) (int b) (int a))
@@ -295,6 +317,25 @@ EOF
 (define sf-magenta (sf-color-create 255 0 255 0))
 (define sf-cyan (sf-color-create 0 255 255 0))|#
 
+(define sf-clock-create
+  (foreign-lambda
+    (c-pointer sfClock) "sfClock_Create"))
+
+(define sf-clock-get-time
+  (foreign-lambda
+    int "sfClock_GetTime" (c-pointer sfClock)))
+
+(define sf-clock-reset
+  (foreign-lambda
+    void "sfClock_Reset" (c-pointer sfClock)))
+
+(define sf-clock-destroy
+  (foreign-lambda
+    void "sfClock_Destroy" (c-pointer sfClock)))
+
+(define sf-sleep
+  (foreign-lambda
+    void "sfSleep" int))
 
 )
 
