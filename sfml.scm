@@ -38,6 +38,7 @@
               sf-cyan|#
 
               sf-event-create
+              sf-event-destroy
               sf-event-closed?
 
               sf-event-key-pressed?
@@ -46,6 +47,7 @@
               sf-event-key-system?
               sf-event-key-shift?
               sf-event-key?
+              sf-event-key
 
               sf-key-A sf-key-B sf-key-C sf-key-D
               sf-key-E sf-key-F sf-key-G sf-key-H
@@ -95,6 +97,7 @@ EOF
 (define-foreign-type sfIntRect "sfIntRect" '())
 (define-foreign-type sfColor "sfColor" '())
 (define-foreign-type sfClock "sfClock" '())
+(define-foreign-type sfKeyCode "sfKeyCode" '())
 
 ;(define-foreign-variable sf-default-style unsigned-integer64 "sfDefaultStyle")
 
@@ -196,10 +199,19 @@ EOF
   (foreign-lambda void
     "sfRenderWindow_Close" (c-pointer sfRenderWindow)))
 
-(define (sf-event-create)
+#|(define (sf-event-create)
   ((foreign-lambda* (c-pointer sfEvent) ((int a)) ; HAR HAR DUMMIES
     "sfEvent* evt = (sfEvent*)C_alloc(sizeof(sfEvent) / sizeof(C_word));
+     C_return(evt);") 0))|#
+
+(define (sf-event-create)
+  ((foreign-lambda* (c-pointer sfEvent) ((int a)) ; HAR HAR DUMMIES
+    "sfEvent* evt = (sfEvent*)malloc(sizeof(sfEvent));
      C_return(evt);") 0))
+
+(define sf-event-destroy
+  (foreign-lambda* void (((c-pointer sfEvent) event))
+    "free(event);"))
 
 (define (sf-event-closed? event)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
@@ -237,6 +249,11 @@ EOF
 ;    (when (sf-event-key-ctrl? event)
 ;      (print "control-z pressed"))))
 
+(define sf-event-key
+  (foreign-lambda* int
+    (((c-pointer sfEvent) event))
+    "C_return((int)event->Key.Code);"))
+
 (define (sf-event-key? event key)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event) (int key))
      "if (event->Key.Code == key)
@@ -247,9 +264,10 @@ EOF
   (syntax-rules ()
     ((define-key sym name)
      (define sym
-       (foreign-value name int)))))
+       (foreign-value name unsigned-int)))))
 
 (define-key sf-key-A "sfKeyA")
+
 (define-key sf-key-B "sfKeyB")
 (define-key sf-key-C "sfKeyC")
 (define-key sf-key-D "sfKeyD")
