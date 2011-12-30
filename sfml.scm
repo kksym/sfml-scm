@@ -19,6 +19,20 @@
               sf-sprite-destroy
               sf-sprite-move
               sf-sprite-rotate
+              sf-sprite-set-position
+              sf-sprite-set-scale-x
+              sf-sprite-set-scale-y
+              sf-sprite-set-scale
+              sf-sprite-set-rotation
+              sf-sprite-set-origin
+              sf-sprite-set-color
+
+              sf-sprite-get-scale-x
+              sf-sprite-get-scale-y
+              sf-sprite-get-rotation
+              sf-sprite-get-origin-x
+              sf-sprite-get-origin-y
+              ; sf-sprite-get-color
 
               sf-render-window-clear
               sf-render-window-draw-sprite
@@ -99,8 +113,6 @@ EOF
 (define-foreign-type sfClock "sfClock" '())
 (define-foreign-type sfKeyCode "sfKeyCode" '())
 
-;(define-foreign-variable sf-default-style unsigned-integer64 "sfDefaultStyle")
-
 (define sf-default-style
   (foreign-value "sfDefaultStyle" unsigned-integer64))
 
@@ -166,6 +178,56 @@ EOF
   (foreign-lambda
     void "sfSprite_Rotate" (c-pointer sfSprite) float))
 
+(define sf-sprite-set-position
+  (foreign-lambda
+    void "sfSprite_SetPosition" (c-pointer sfSprite) float float))
+
+(define sf-sprite-set-scale-x
+  (foreign-lambda
+    void "sfSprite_SetScaleX" (c-pointer sfSprite) float))
+
+(define sf-sprite-set-scale-y
+  (foreign-lambda
+    void "sfSprite_SetScaleY" (c-pointer sfSprite) float))
+
+(define sf-sprite-set-scale
+  (foreign-lambda
+    void "sfSprite_SetScale" (c-pointer sfSprite) float float))
+
+(define sf-sprite-set-rotation
+  (foreign-lambda
+    void "sfSprite_SetRotation" (c-pointer sfSprite) float))
+
+(define sf-sprite-set-origin
+  (foreign-lambda
+    void "sfSprite_SetOrigin" (c-pointer sfSprite) float float))
+
+(define sf-sprite-set-color
+  (foreign-lambda* void
+    (((c-pointer sfSprite) sprite) (int r) (int g) (int b))
+    "sfColor clr = { r, g, b, a };
+     sfSprite_SetColor(sprite, clr);"))
+
+(define sf-sprite-get-scale-x
+  (foreign-lambda
+    float "sfSprite_GetScaleX" (c-pointer sfSprite))
+
+(define sf-sprite-get-scale-y
+  (foreign-lambda
+    float "sfSprite_GetScaleY" (c-pointer sfSprite)))
+
+(define sf-sprite-get-rotation
+  (foreign-lambda
+    float "sfSprite_GetRotation" (c-pointer sfSprite)))
+
+(define sf-sprite-get-origin-x
+  (foreign-lambda
+    float "sfSprite_GetOriginX" (c-pointer sfSprite)))
+
+(define sf-sprite-get-origin-y
+  (foreign-lambda
+    float "sfSprite_GetOriginX" (c-pointer sfSprite)))
+
 #|(define sf-render-window-clear
   (foreign-lambda* void
     (((c-pointer sfRenderWindow) window) ((c-pointer sfColor) clr))
@@ -198,11 +260,6 @@ EOF
 (define sf-render-window-close
   (foreign-lambda void
     "sfRenderWindow_Close" (c-pointer sfRenderWindow)))
-
-#|(define (sf-event-create)
-  ((foreign-lambda* (c-pointer sfEvent) ((int a)) ; HAR HAR DUMMIES
-    "sfEvent* evt = (sfEvent*)C_alloc(sizeof(sfEvent) / sizeof(C_word));
-     C_return(evt);") 0))|#
 
 (define (sf-event-create)
   ((foreign-lambda* (c-pointer sfEvent) ((int a)) ; HAR HAR DUMMIES
@@ -250,8 +307,7 @@ EOF
 ;      (print "control-z pressed"))))
 
 (define sf-event-key
-  (foreign-lambda* int
-    (((c-pointer sfEvent) event))
+  (foreign-lambda* int (((c-pointer sfEvent) event))
     "C_return((int)event->Key.Code);"))
 
 (define (sf-event-key? event key)
@@ -267,7 +323,6 @@ EOF
        (foreign-value name unsigned-int)))))
 
 (define-key sf-key-A "sfKeyA")
-
 (define-key sf-key-B "sfKeyB")
 (define-key sf-key-C "sfKeyC")
 (define-key sf-key-D "sfKeyD")
