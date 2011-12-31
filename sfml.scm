@@ -7,6 +7,15 @@
               
               sf-texture-create-from-file
               sf-texture-destroy
+              sf-texture-create
+              sf-texture-copy
+              sf-texture-get-width
+              sf-texture-get-height
+              sf-texture-update-from-render-window
+              sf-texture-bind
+              sf-texture-set-smooth
+              sf-texture-is-smooth?
+              sf-texture-get-maximum-size
               
               sf-sprite-create
               sf-sprite-set-texture
@@ -142,6 +151,42 @@ EOF
   (foreign-lambda
     void "sfTexture_Destroy" (c-pointer sfTexture)))
 
+(define sf-texture-create
+  (foreign-lambda
+    (c-pointer sfTexture) "sfTexture_Create" unsigned-integer unsigned-integer))
+
+(define sf-texture-copy
+  (foreign-lambda
+    (c-pointer sfTexture) "sfTexture_Copy" (c-pointer sfTexture)))
+
+(define sf-texture-get-width
+  (foreign-lambda
+    unsigned-integer "sfTexture_GetWidth" (c-pointer sfTexture)))
+
+(define sf-texture-get-height
+  (foreign-lambda
+    unsigned-integer "sfTexture_GetHeight" (c-pointer sfTexture)))
+
+(define sf-texture-update-from-render-window
+  (foreign-lambda
+    void "sfTexture_UpdateFromRenderWindow" (c-pointer sfTexture) (c-pointer sfRenderWindow) unsigned-integer unsigned-integer))
+
+(define sf-texture-bind
+  (foreign-lambda
+    void "sfTexture_Bind" (c-pointer sfTexture)))
+
+(define sf-texture-set-smooth
+  (foreign-lambda
+    void "sfTexture_SetSmooth" (c-pointer sfTexture) int))
+
+(define (sf-texture-is-smooth? tx)
+  (not (zero? ((foreign-lambda
+    int "sfTexture_IsSmooth" (c-pointer sfTexture)) tx))))
+
+(define sf-texture-get-maximum-size
+  (foreign-lambda
+    unsigned-integer "sfTexture_GetMaximumSize" (c-pointer sfTexture)))
+
 (define sf-sprite-create
   (foreign-lambda
     (c-pointer sfSprite) "sfSprite_Create"))
@@ -212,13 +257,13 @@ EOF
 
 (define sf-sprite-set-color
   (foreign-lambda* void
-    (((c-pointer sfSprite) sprite) (int r) (int g) (int b))
+    (((c-pointer sfSprite) sprite) (int r) (int g) (int b) (int a))
     "sfColor clr = { r, g, b, a };
      sfSprite_SetColor(sprite, clr);"))
 
 (define sf-sprite-get-scale-x
   (foreign-lambda
-    float "sfSprite_GetScaleX" (c-pointer sfSprite))
+    float "sfSprite_GetScaleX" (c-pointer sfSprite)))
 
 (define sf-sprite-get-scale-y
   (foreign-lambda
