@@ -1,10 +1,34 @@
 ;; sfml.scm
 
-(module sfml (
+(module sfml
+(
+          ;; sfStyles
+
+                ; i should work on making this more flexible, so that the user
+                ; can construct their own styles without having to use any
+                ; predefinitions. bitwise-ior fun...
+
               sf-default-style
+
+          ;; sfRenderWindow ---
+
               sf-render-window-create
               sf-render-window-destroy
+              sf-render-window-clear
+              sf-render-window-draw-sprite
+              sf-render-window-display
+              sf-render-window-poll-event
+              sf-render-window-is-opened
+              sf-render-window-close
+
+          ;; sfTexture ---
               
+                ; i need to get IntRects working, since textures seem to use both
+                ; raw IntRect and IntRect* is various places, i could represent
+                ; an IntRect as #(Left Top Width Height) and make all the
+                ; functions use this style, hiding away dirty raw memory or
+                ; pointer operations. proper conversion isn't too important here.
+
               sf-texture-create-from-file
               sf-texture-destroy
               sf-texture-create
@@ -16,6 +40,8 @@
               sf-texture-set-smooth
               sf-texture-is-smooth?
               sf-texture-get-maximum-size
+
+          ;; sfSprite ---
               
               sf-sprite-create
               sf-sprite-set-texture
@@ -35,15 +61,14 @@
               sf-sprite-set-rotation
               sf-sprite-set-origin
               sf-sprite-set-color
-
               sf-sprite-get-scale-x
               sf-sprite-get-scale-y
               sf-sprite-get-rotation
               sf-sprite-get-origin-x
               sf-sprite-get-origin-y
-              ; sf-sprite-get-color
-              ; sf-sprite-set-sub-rect
-              ; sf-sprite-get-sub-rect
+              ;sf-sprite-get-color
+              ;sf-sprite-set-sub-rect
+              ;sf-sprite-get-sub-rect
               sf-sprite-resize
               sf-sprite-flip-x
               sf-sprite-flip-y
@@ -51,25 +76,28 @@
               sf-sprite-transform-to-local
               sf-sprite-transform-to-global
 
-              sf-render-window-clear
-              sf-render-window-draw-sprite
-              sf-render-window-display
-              sf-render-window-poll-event
-              sf-render-window-is-opened
-              sf-render-window-close
+          ;; sfColor ---
 
-              #|sf-color-create
-              sf-black
-              sf-white
-              sf-red
-              sf-green
-              sf-blue
-              sf-yellow
-              sf-magenta
-              sf-cyan|#
+                ; i should represent colours as a vector of the attributing data
+                ; like #(Red Green Blue Alpha) and map these to an sfColor struct
+                ; inside the function. i should get proper conversion done using
+                ; a vector for faster random access of values.
+              
+              ;sf-color-create
+              ;sf-black
+              ;sf-white
+              ;sf-red
+              ;sf-green
+              ;sf-blue
+              ;sf-yellow
+              ;sf-magenta
+              ;sf-cyan
+
+          ;; sfEvent ---
 
               sf-event-create
               sf-event-destroy
+
               sf-event-closed?
 
               sf-event-key-pressed?
@@ -79,6 +107,8 @@
               sf-event-key-shift?
               sf-event-key?
               sf-event-key
+
+          ;; sfEvent.Key.Code ---
 
               sf-key-A sf-key-B sf-key-C sf-key-D
               sf-key-E sf-key-F sf-key-G sf-key-H
@@ -102,20 +132,25 @@
               sf-key-lalt sf-key-ralt
               sf-key-lsystem sf-key-rsystem
 
+          ;; sfClock ---
+
               sf-clock-create
               sf-clock-get-time
               sf-clock-reset
               sf-clock-destroy
 
+          ;; etc.
+
               sf-sleep
-	      )
-  (import scheme chicken foreign)
+)
+; eventually i'll organise the export list more
+(import scheme chicken foreign)
 
 (foreign-declare #<<EOF
 
-#include <SFML/System.h>
-#include <SFML/Window.h>
-#include <SFML/Graphics.h>
+    #include <SFML/System.h>
+    #include <SFML/Window.h>
+    #include <SFML/Graphics.h>
 
 EOF
 )
@@ -305,13 +340,6 @@ EOF
   (foreign-lambda
     void "sfSprite_TransformToGlobal" (c-pointer sfSprite) float float (c-pointer float) (c-pointer float)))
 
-#|(define sf-render-window-clear
-  (foreign-lambda* void
-    (((c-pointer sfRenderWindow) window) ((c-pointer sfColor) clr))
-     "//printf(\"RED %d GREEN %d BLUE %d\\n\", clr->r, clr->g, clr->b);
-      printf(\"CLR PTR %x\\n\", clr);
-      sfRenderWindow_Clear(window, *clr);"))|#
-
 (define sf-render-window-clear
   (foreign-lambda* void
     (((c-pointer sfRenderWindow) window) (int r) (int g) (int b) (int a))
@@ -374,14 +402,6 @@ EOF
 (define (sf-event-key-system? event)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
      "C_return((int)event->Key.System);") event))))
-
-; i probably could (and should) do something like
-; (case (sf-event-key event)
-;   ((sf-key-A)
-;    (print "a pressed"))
-;   ((sf-key-Z)
-;    (when (sf-event-key-ctrl? event)
-;      (print "control-z pressed"))))
 
 (define sf-event-key
   (foreign-lambda* int (((c-pointer sfEvent) event))
@@ -489,7 +509,4 @@ EOF
     void "sfSleep" int))
 
 )
-
-;; --------------------------------------------------------------------
-
 
