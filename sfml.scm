@@ -33,6 +33,14 @@
               sf-sprite-get-origin-x
               sf-sprite-get-origin-y
               ; sf-sprite-get-color
+              ; sf-sprite-set-sub-rect
+              ; sf-sprite-get-sub-rect
+              sf-sprite-resize
+              sf-sprite-flip-x
+              sf-sprite-flip-y
+              sf-sprite-get-texture
+              sf-sprite-transform-to-local
+              sf-sprite-transform-to-global
 
               sf-render-window-clear
               sf-render-window-draw-sprite
@@ -227,6 +235,30 @@ EOF
 (define sf-sprite-get-origin-y
   (foreign-lambda
     float "sfSprite_GetOriginX" (c-pointer sfSprite)))
+
+(define sf-sprite-resize
+  (foreign-lambda
+    void "sfSprite_Resize" (c-pointer sfSprite) float float))
+
+(define sf-sprite-flip-x
+  (foreign-lambda
+    void "sfSprite_FlipX" (c-pointer sfSprite) unsigned-integer))
+
+(define sf-sprite-flip-y
+  (foreign-lambda
+    void "sfSprite_FlipY" (c-pointer sfSprite) unsigned-integer))
+
+(define sf-sprite-get-texture
+  (foreign-lambda
+    (c-pointer sfTexture) "sfSprite_GetTexture" (c-pointer sfSprite)))
+
+(define sf-sprite-transform-to-local
+  (foreign-lambda
+    void "sfSprite_TransformToLocal" (c-pointer sfSprite) float float (c-pointer float) (c-pointer float)))
+
+(define sf-sprite-transform-to-global
+  (foreign-lambda
+    void "sfSprite_TransformToGlobal" (c-pointer sfSprite) float float (c-pointer float) (c-pointer float)))
 
 #|(define sf-render-window-clear
   (foreign-lambda* void
