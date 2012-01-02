@@ -357,7 +357,7 @@ EOF
     (lambda (window event)
       (not (zero? (c-rw-poll-event window event))))))
 
-(define (sf-render-window-is-open? window)
+(define sf-render-window-is-open?
   (let ((c-rw-is-open?
           (foreign-lambda int
             "sfRenderWindow_IsOpened" (c-pointer sfRenderWindow))))
