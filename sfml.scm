@@ -208,9 +208,12 @@ EOF
   (foreign-lambda
     void "sfTexture_SetSmooth" (c-pointer sfTexture) int))
 
-(define (sf-texture-is-smooth? tx)
-  (not (zero? ((foreign-lambda
-    int "sfTexture_IsSmooth" (c-pointer sfTexture)) tx))))
+(define sf-texture-is-smooth?
+  (let ((c-is-smooth?
+         (foreign-lambda
+           int "sfTexture_IsSmooth" (c-pointer sfTexture))))
+    (lambda (tx)
+      (not (zero? (c-is-smooth? tx))))))
 
 (define sf-texture-get-maximum-size
   (foreign-lambda
@@ -375,30 +378,38 @@ EOF
   (foreign-lambda* void (((c-pointer sfEvent) event))
     "free(event);"))
 
-(define (sf-event-closed? event)
-  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
-    "if (event->Type == sfEvtClosed)
-         C_return(1);
-     C_return(0);") event))))
+(define sf-event-closed?
+  (let ((c-event-closed?
+         (foreign-lambda* int (((c-pointer sfEvent) event))
+           "if (event->Type == sfEvtClosed)
+               C_return(1);
+            C_return(0);")))
+    (lambda (event)
+      (not (zero? (c-event-closed? event))))))
 
+;;; FIXME: use a closure
 (define (sf-event-key-pressed? event)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
     "if (event->Type == sfEvtKeyPressed)
          C_return(1);
      C_return(0);") event))))
 
+;;; FIXME: use a closure
 (define (sf-event-key-ctrl? event)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
      "C_return((int)event->Key.Control);") event))))
 
+;;; FIXME: use a closure
 (define (sf-event-key-alt? event)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
      "C_return((int)event->Key.Alt);") event))))
 
+;;; FIXME: use a closure
 (define (sf-event-key-shift? event)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
      "C_return((int)event->Key.Shift);") event))))
 
+;;; FIXME: use a closure
 (define (sf-event-key-system? event)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
      "C_return((int)event->Key.System);") event))))
@@ -407,6 +418,7 @@ EOF
   (foreign-lambda* int (((c-pointer sfEvent) event))
     "C_return((int)event->Key.Code);"))
 
+;;; FIXME: use a closure
 (define (sf-event-key? event key)
   (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event) (int key))
      "if (event->Key.Code == key)
