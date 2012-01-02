@@ -99,7 +99,6 @@
               sf-event-key-alt?
               sf-event-key-system?
               sf-event-key-shift?
-              sf-event-key?
               sf-event-key
 
           ;; sfEvent.Key.Code ---
@@ -337,12 +336,6 @@ EOF
   (foreign-lambda
     void "sfSprite_TransformToGlobal" (c-pointer sfSprite) float float (c-pointer float) (c-pointer float)))
 
-;(define sf-render-window-clear
-; (foreign-lambda* void
-;   (((c-pointer sfRenderWindow) window) (int r) (int g) (int b) (int a))
-;    "sfColor clr = { r, g, b, a };
-;     sfRenderWindow_Clear(window, clr);"))
-
 (define (sf-render-window-clear window cvec)
  ((foreign-lambda* void
    (((c-pointer sfRenderWindow) window) (int r) (int g) (int b) (int a))
@@ -387,43 +380,46 @@ EOF
     (lambda (event)
       (not (zero? (c-event-closed? event))))))
 
-;;; FIXME: use a closure
-(define (sf-event-key-pressed? event)
-  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
-    "if (event->Type == sfEvtKeyPressed)
-         C_return(1);
-     C_return(0);") event))))
+(define sf-event-key-pressed?
+  (let ((c-event-key-pressed?
+          (foreign-lambda* int (((c-pointer sfEvent) event))
+            "if (event->Type == sfEvtKeyPressed)
+                C_return(1);
+             C_return(0);")))
+    (lambda (event)
+      (not (zero? (c-event-key-pressed? event))))))
 
-;;; FIXME: use a closure
-(define (sf-event-key-ctrl? event)
-  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
-     "C_return((int)event->Key.Control);") event))))
+(define sf-event-key-ctrl?
+  (let ((c-key-ctrl?
+          (foreign-lambda* int (((c-pointer sfEvent) event))
+            "C_return((int)event->Key.Control);")))
+    (lambda (event)
+      (not (zero? (c-key-ctrl? event))))))
 
-;;; FIXME: use a closure
-(define (sf-event-key-alt? event)
-  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
-     "C_return((int)event->Key.Alt);") event))))
+(define sf-event-key-alt?
+  (let ((c-key-alt?
+          (foreign-lambda* int (((c-pointer sfEvent) event))
+            "C_return((int)event->Key.Alt);")))
+    (lambda (event)
+      (not (zero? (c-key-alt? event))))))
 
-;;; FIXME: use a closure
-(define (sf-event-key-shift? event)
-  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
-     "C_return((int)event->Key.Shift);") event))))
+(define sf-event-key-shift?
+  (let ((c-key-shift?
+          (foreign-lambda* int (((c-pointer sfEvent) event))
+            "C_return((int)event->Key.Shift);")))
+    (lambda (event)
+      (not (zero? (c-key-shift? event))))))
 
-;;; FIXME: use a closure
-(define (sf-event-key-system? event)
-  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event))
-     "C_return((int)event->Key.System);") event))))
+(define sf-event-key-system?
+  (let ((c-key-system?
+          (foreign-lambda* int (((c-pointer sfEvent) event))
+            "C_return((int)event->Key.System);")))
+    (lambda (event)
+      (not (zero? (c-key-system? event))))))
 
 (define sf-event-key
   (foreign-lambda* int (((c-pointer sfEvent) event))
     "C_return((int)event->Key.Code);"))
-
-;;; FIXME: use a closure
-(define (sf-event-key? event key)
-  (not (zero? ((foreign-lambda* int (((c-pointer sfEvent) event) (int key))
-     "if (event->Key.Code == key)
-          C_return(1);
-      C_return(0);") event key))))
 
 (define-syntax define-key
   (syntax-rules ()
