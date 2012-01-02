@@ -6,7 +6,7 @@
       (event (sf-event-create)))
   (sf-sprite-set-texture sprite texture 0)
   (let loop ()
-    (when (sf-render-window-is-opened window)
+    (when (sf-render-window-is-open? window)
       (let poll-loop ()
         (when (sf-render-window-poll-event window event)
           (cond
