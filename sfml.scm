@@ -78,20 +78,14 @@
 
           ;; sfColor ---
 
-                ; i should represent colours as a vector of the attributing data
-                ; like #(Red Green Blue Alpha) and map these to an sfColor struct
-                ; inside the function. i should get proper conversion done using
-                ; a vector for faster random access of values.
-              
-              ;sf-color-create
-              ;sf-black
-              ;sf-white
-              ;sf-red
-              ;sf-green
-              ;sf-blue
-              ;sf-yellow
-              ;sf-magenta
-              ;sf-cyan
+              sf-black
+              sf-white
+              sf-red
+              sf-green
+              sf-blue
+              sf-yellow
+              sf-magenta
+              sf-cyan
 
           ;; sfEvent ---
 
@@ -290,11 +284,11 @@ EOF
   (foreign-lambda
     void "sfSprite_SetOrigin" (c-pointer sfSprite) float float))
 
-(define sf-sprite-set-color
-  (foreign-lambda* void
+(define (sf-sprite-set-color spr cvec)
+  ((foreign-lambda* void
     (((c-pointer sfSprite) sprite) (int r) (int g) (int b) (int a))
     "sfColor clr = { r, g, b, a };
-     sfSprite_SetColor(sprite, clr);"))
+     sfSprite_SetColor(sprite, clr);") spr (vector-ref cvec 0) (vector-ref cvec 1) (vector-ref cvec 2) (vector-ref cvec 3)))
 
 (define sf-sprite-get-scale-x
   (foreign-lambda
@@ -340,11 +334,17 @@ EOF
   (foreign-lambda
     void "sfSprite_TransformToGlobal" (c-pointer sfSprite) float float (c-pointer float) (c-pointer float)))
 
-(define sf-render-window-clear
-  (foreign-lambda* void
-    (((c-pointer sfRenderWindow) window) (int r) (int g) (int b) (int a))
-     "sfColor clr = { r, g, b, a };
-      sfRenderWindow_Clear(window, clr);"))
+;(define sf-render-window-clear
+; (foreign-lambda* void
+;   (((c-pointer sfRenderWindow) window) (int r) (int g) (int b) (int a))
+;    "sfColor clr = { r, g, b, a };
+;     sfRenderWindow_Clear(window, clr);"))
+
+(define (sf-render-window-clear window cvec)
+ ((foreign-lambda* void
+   (((c-pointer sfRenderWindow) window) (int r) (int g) (int b) (int a))
+    "sfColor clr = { r, g, b, a };
+     sfRenderWindow_Clear(window, clr);") window (vector-ref cvec 0) (vector-ref cvec 1) (vector-ref cvec 2) (vector-ref cvec 3)))
 
 (define sf-render-window-draw-sprite
   (foreign-lambda void
@@ -472,21 +472,14 @@ EOF
 (define-key sf-key-up "sfKeyUp")
 (define-key sf-key-down "sfKeyDown")
 
-#|(define sf-color-create
-  (foreign-lambda* (c-pointer sfColor)
-    ((int r) (int g) (int b) (int a))
-    "sfColor* clr = (sfColor*)C_alloc(sizeof(sfColor));
-     clr->r = r; clr->g = g; clr->b = b; clr->a = a;
-     C_return(clr);")) |#
-
-#|(define sf-black (sf-color-create 0 0 0 0))
-(define sf-white (sf-color-create 255 255 255 0))
-(define sf-red (sf-color-create 255 0 0 0))
-(define sf-green (sf-color-create 0 255 0 0))
-(define sf-blue (sf-color-create 0 0 255 0))
-(define sf-yellow (sf-color-create 255 255 0 0))
-(define sf-magenta (sf-color-create 255 0 255 0))
-(define sf-cyan (sf-color-create 0 255 255 0))|#
+(define sf-black '#(0 0 0 0))
+(define sf-white '#(255 255 255 0))
+(define sf-red '#(255 0 0 0))
+(define sf-green '#(0 255 0 0))
+(define sf-blue '#(0 0 255 0))
+(define sf-yellow '#(255 255 0 0))
+(define sf-magenta '#(255 0 255 0))
+(define sf-cyan '#(0 255 255 0))
 
 (define sf-clock-create
   (foreign-lambda

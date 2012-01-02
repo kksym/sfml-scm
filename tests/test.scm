@@ -13,22 +13,14 @@
             ((sf-event-closed? event)
              (sf-render-window-close window))
             ((sf-event-key-pressed? event)
-             (cond
-               ((sf-event-key? event sf-key-Q)
-                (when (sf-event-key-ctrl? event)
-                  (sf-render-window-close window)))
-               (else (print "key pressed")))
-            
-            ;(if (eqv? (sf-event-key event) sf-key-A)
-            ;  (print "A pressed")) ;; OK WHY DOES THIS WORK
-            ;
-            ;(case (sf-event-key event)
-            ;  ((sf-key-A)
-            ;   (print "A pressed"))) ;; BUT THIS DOESNT
-
-             ))
+             (let ((key (sf-event-key event)))
+               (cond
+                 ((eqv? key sf-key-Q)
+                  (when (sf-event-key-ctrl? event)
+                    (sf-render-window-close window)))
+                 (else (print "key pressed"))))))
           (poll-loop)))
-      (sf-render-window-clear window 0 255 255 0)
+      (sf-render-window-clear window '#(0 255 255 0))
       (sf-render-window-draw-sprite window sprite)
       (sf-render-window-display window)
       (loop)))
