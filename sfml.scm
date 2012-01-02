@@ -18,7 +18,7 @@
               sf-render-window-draw-sprite
               sf-render-window-display
               sf-render-window-poll-event
-              sf-render-window-is-opened
+              sf-render-window-is-open?
               sf-render-window-close
 
           ;; sfTexture ---
@@ -350,13 +350,19 @@ EOF
   (foreign-lambda void
     "sfRenderWindow_Display" (c-pointer sfRenderWindow)))
 
-(define (sf-render-window-poll-event window event)
-  (not (zero? ((foreign-lambda int
-    "sfRenderWindow_PollEvent" (c-pointer sfRenderWindow) (c-pointer sfEvent)) window event))))
+(define sf-render-window-poll-event
+  (let ((c-rw-poll-event
+          (foreign-lambda int
+            "sfRenderWindow_PollEvent" (c-pointer sfRenderWindow) (c-pointer sfEvent))))
+    (lambda (window event)
+      (not (zero? (c-rw-poll-event window event))))))
 
-(define (sf-render-window-is-opened window)
-  (not (zero? ((foreign-lambda int
-     "sfRenderWindow_IsOpened" (c-pointer sfRenderWindow)) window))))
+(define (sf-render-window-is-open? window)
+  (let ((c-rw-is-open?
+          (foreign-lambda int
+            "sfRenderWindow_IsOpened" (c-pointer sfRenderWindow))))
+    (lambda (window)
+      (not (zero? (c-rw-is-open? window))))))
 
 (define sf-render-window-close
   (foreign-lambda void
