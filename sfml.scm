@@ -287,10 +287,13 @@ EOF
     void "sfSprite_SetOrigin" (c-pointer sfSprite) float float))
 
 (define (sf-sprite-set-color spr cvec)
-  ((foreign-lambda* void
-    (((c-pointer sfSprite) sprite) (int r) (int g) (int b) (int a))
-    "sfColor clr = { r, g, b, a };
-     sfSprite_SetColor(sprite, clr);") spr (vector-ref cvec 0) (vector-ref cvec 1) (vector-ref cvec 2) (vector-ref cvec 3)))
+  (let ((c-set-clr
+          (foreign-lambda* void
+            (((c-pointer sfSprite) sprite) (int r) (int g) (int b) (int a))
+            "sfColor clr = { r, g, b, a };
+             sfSprite_SetColor(sprite, clr);")))
+    (lambda (spr cvec)
+      (c-set-clr spr (vector-ref cvec 0) (vector-ref cvec 1) (vector-ref cvec 2) (vector-ref cvec 3)))))
 
 (define sf-sprite-get-scale-x
   (foreign-lambda
@@ -336,11 +339,15 @@ EOF
   (foreign-lambda
     void "sfSprite_TransformToGlobal" (c-pointer sfSprite) float float (c-pointer float) (c-pointer float)))
 
-(define (sf-render-window-clear window cvec)
- ((foreign-lambda* void
-   (((c-pointer sfRenderWindow) window) (int r) (int g) (int b) (int a))
-    "sfColor clr = { r, g, b, a };
-     sfRenderWindow_Clear(window, clr);") window (vector-ref cvec 0) (vector-ref cvec 1) (vector-ref cvec 2) (vector-ref cvec 3)))
+(define sf-render-window-clear
+  (let ((c-win-clr
+          (foreign-lambda* void
+            (((c-pointer sfRenderWindow) window) (int r) (int g) (int b) (int a))
+            "sfColor clr = { r, g, b, a };
+             sfRenderWindow_Clear(window, clr);")))
+    (lambda (window cvec)
+      (c-win-clr window
+                 (vector-ref cvec 0) (vector-ref cvec 1) (vector-ref cvec 2) (vector-ref cvec 3)))))
 
 (define sf-render-window-draw-sprite
   (foreign-lambda void
