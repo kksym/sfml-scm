@@ -159,6 +159,25 @@
               sf-clock-reset
               sf-clock-destroy
 
+          ;; sfView ---
+
+              sf-view-create
+              sf-view-create-from-rect
+              sf-view-copy
+              sf-view-destroy
+              sf-view-set-center
+              sf-view-set-rotation
+              sf-view-set-viewport
+              sf-view-reset
+              sf-view-get-center-x
+              sf-view-get-center-y
+              sf-view-get-width
+              sf-view-get-height
+              sf-view-get-rotation
+              sf-view-move
+              sf-view-rotate
+              sf-view-zoom
+
           ;; etc.
 
               sf-sleep
@@ -181,6 +200,7 @@ EOF
 (define-foreign-type sfSprite "sfSprite" '())
 (define-foreign-type sfEvent "sfEvent" '())
 (define-foreign-type sfIntRect "sfIntRect" '())
+(define-foreign-type sfFloatRect "sfFloatRect" '())
 (define-foreign-type sfColor "sfColor" '())
 (define-foreign-type sfClock "sfClock" '())
 (define-foreign-type sfKeyCode "sfKeyCode" '())
@@ -626,6 +646,91 @@ EOF
 (define sf-yellow '#(255 255 0 0))
 (define sf-magenta '#(255 0 255 0))
 (define sf-cyan '#(0 255 255 0))
+
+(define sf-view-create
+  (foreign-lambda (c-pointer sfView)
+    "sfView_Create"))
+
+(define sf-view-create-from-rect
+  (let ((c-view-crtrect
+          (foreign-lambda* (c-pointer sfView)
+            ((float left) (float top) (float width) (float height))
+            "sfFloatRect fr = { left, top, width, height };
+             sfView* view = sfView_CreateFromRect(fr);
+             C_return(view);")))
+    (lambda (frect)
+      (c-view-crtrect (vector-ref frect 0) (vector-ref frect 1)
+                      (vector-ref frect 2) (vector-ref frect 3)))))
+
+(define sf-view-copy
+  (foreign-lambda (c-pointer sfView)
+    "sfView_Copy" (c-pointer sfView)))
+
+(define sf-view-destroy
+  (foreign-lambda void
+    "sfView_Destroy" (c-pointer sfView)))
+
+(define sf-view-set-center
+  (foreign-lambda void
+    "sfView_SetCenter" (c-pointer sfView) float float))
+
+(define sf-view-set-rotation
+  (foreign-lambda void
+    "sfView_SetRotation" (c-pointer sfView) float))
+
+(define sf-view-set-viewport
+  (let ((c-view-setvp
+          (foreign-lambda* void
+            (((c-pointer sfView) view)
+             (float left) (float top) (float width) (float height))
+            "sfFloatRect fr = { left, top, width, height };
+             sfView_SetViewport(view, fr);")))
+    (lambda (view frect)
+      (c-view-setvp view (vector-ref frect 0) (vector-ref frect 1)
+                      (vector-ref frect 2) (vector-ref frect 3)))))
+
+(define sf-view-reset
+  (let ((c-view-reset
+          (foreign-lambda* void
+            (((c-pointer sfView) view)
+             (float left) (float top) (float width) (float height))
+            "sfFloatRect fr = { left, top, width, height };
+             sfView_Reset(view, fr);")))
+    (lambda (view frect)
+      (c-view-reset view (vector-ref frect 0) (vector-ref frect 1)
+                      (vector-ref frect 2) (vector-ref frect 3)))))
+
+(define sf-view-get-center-x
+  (foreign-lambda float
+    "sfView_GetCenterX" (c-pointer sfView)))
+
+(define sf-view-get-center-y
+  (foreign-lambda float
+    "sfView_GetCenterY" (c-pointer sfView)))
+
+(define sf-view-get-width
+  (foreign-lambda float
+    "sfView_GetWidth" (c-pointer sfView)))
+
+(define sf-view-get-height
+  (foreign-lambda float
+    "sfView_GetHeight" (c-pointer sfView)))
+
+(define sf-view-get-rotation
+  (foreign-lambda void
+    "sfView_GetRotation" (c-pointer sfView)))
+
+(define sf-view-move
+  (foreign-lambda void
+    "sfView_Move" (c-pointer sfView) float float))
+
+(define sf-view-rotate
+  (foreign-lambda void
+    "sfView_Rotate" (c-pointer sfView) float))
+
+(define sf-view-zoom
+  (foreign-lambda void
+    "sfView_Zoom" (c-pointer sfView) float))
 
 (define sf-clock-create
   (foreign-lambda
