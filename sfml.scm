@@ -42,9 +42,9 @@
               ;sf-render-window-draw-sprite-with-shader
               ;sf-render-window-draw-shape-with-shader
               ;sf-render-window-draw-text-with-shader
-              ;sf-render-window-set-view
-              ;sf-render-window-get-view
-              ;sf-render-window-get-default-view
+              sf-render-window-set-view
+              sf-render-window-get-view
+              sf-render-window-get-default-view
               sf-render-window-convert-coords
               ;sf-render-window-capture
 
