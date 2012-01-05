@@ -378,7 +378,9 @@ EOF
 
 (define sf-texture-update-from-render-window
   (foreign-lambda
-    void "sfTexture_UpdateFromRenderWindow" (c-pointer sfTexture) (c-pointer sfRenderWindow) unsigned-integer unsigned-integer))
+    void "sfTexture_UpdateFromRenderWindow"
+    (c-pointer sfTexture) (c-pointer sfRenderWindow)
+    unsigned-integer unsigned-integer))
 
 (define sf-texture-bind
   (foreign-lambda
