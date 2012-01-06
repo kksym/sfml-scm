@@ -37,7 +37,7 @@
               sf-render-window-set-framerate-limit
               sf-render-window-get-frame-time
               sf-render-window-set-joystick-threshold
-              ;sf-render-window-draw-text
+              sf-render-window-draw-text
               ;sf-render-window-draw-shape
               ;sf-render-window-draw-sprite-with-shader
               ;sf-render-window-draw-shape-with-shader
@@ -382,7 +382,9 @@ EOF
   (foreign-lambda void
     "sfRenderWindow_SetJoystickThreshold" (c-pointer sfRenderWindow) float))
 
-;sf-render-window-draw-text
+(define sf-render-window-draw-text
+  (foreign-lambda void
+    "sfRenderWindow_DrawText" (c-pointer sfRenderWindow) (c-pointer sfText)))
 
 ;sf-render-window-draw-shape
 
