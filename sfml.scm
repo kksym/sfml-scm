@@ -178,6 +178,21 @@
               sf-view-rotate
               sf-view-zoom
 
+          ;; sfFont ---
+             
+              sf-font-create-from-file
+              sf-font-copy
+              sf-font-destroy
+              ;sf-font-get-glyph
+              sf-font-get-kerning
+              sf-font-get-line-spacing
+              sf-font-get-texture
+              sf-font-get-default-font
+          
+          ;; sfText ---
+              
+;              sf-text-create
+
           ;; etc.
 
               sf-sleep
@@ -205,6 +220,7 @@ EOF
 (define-foreign-type sfClock "sfClock" '())
 (define-foreign-type sfKeyCode "sfKeyCode" '())
 (define-foreign-type sfView "sfView" '())
+(define-foreign-type sfFont "sfFont" '())
 
 (define sf-default-style
   (foreign-value "sfDefaultStyle" unsigned-integer64))
@@ -733,6 +749,35 @@ EOF
 (define sf-view-zoom
   (foreign-lambda void
     "sfView_Zoom" (c-pointer sfView) float))
+
+(define sf-font-create-from-file
+  (foreign-lambda (c-pointer sfFont)
+    "sfFont_CreateFromFile" c-string))
+
+(define sf-font-copy
+  (foreign-lambda (c-pointer sfFont)
+    "sfFont_Copy" (c-pointer sfFont)))
+
+(define sf-font-destroy
+  (foreign-lambda void
+    "sfFont_Destroy" (c-pointer sfFont)))
+
+(define sf-font-get-kerning
+  (foreign-lambda int
+    "sfFont_GetKerning"
+    (c-pointer sfFont) unsigned-integer32 unsigned-integer32 unsigned-integer))
+
+(define sf-font-get-line-spacing
+  (foreign-lambda int
+    "sfFont_GetLineSpacing" (c-pointer sfFont) unsigned-integer))
+
+(define sf-font-get-texture
+  (foreign-lambda (c-pointer sfTexture)
+    "sfFont_GetTexture" (c-pointer sfFont) unsigned-integer))
+
+(define sf-font-get-default-font
+  (foreign-lambda (c-pointer sfFont)
+    "sfFont_GetDefaultFont"))
 
 (define sf-clock-create
   (foreign-lambda
