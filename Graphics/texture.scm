@@ -3,7 +3,7 @@
 
 (define sf-texture-create-from-file
   (foreign-lambda
-     (c-pointer sfTexture) "sfTexture_CreateFromFile" c-string (c-pointer sfIntRect)))
+    (c-pointer sfTexture) "sfTexture_CreateFromFile" c-string (c-pointer sfIntRect)))
 
 (define sf-texture-destroy
   (foreign-lambda
