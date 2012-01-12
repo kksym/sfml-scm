@@ -297,6 +297,7 @@ EOF
 (include "./Graphics/text.scm")
 (include "./Graphics/font.scm")
 (include "./Graphics/rect.scm")
+(include "./Graphics/shape.scm")
 
 (include "./Window/event.scm")
 (include "./Window/window.scm")
