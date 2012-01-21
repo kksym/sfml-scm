@@ -230,10 +230,10 @@
               sf-text-get-character-pos
               ;sf-text-get-rect
              
-              #|sf-shape-create
+              sf-shape-create
               sf-shape-create-line
-              sf-shape-create-rectangle
-              sf-shape-create-circle
+              ;sf-shape-create-rectangle
+              ;sf-shape-create-circle
               sf-shape-copy
               sf-shape-destroy
               sf-shape-set-x
@@ -260,18 +260,18 @@
               sf-shape-rotate
               sf-shape-transform-to-local
               sf-shape-transform-to-global
-              sf-shape-add-point
+              ;sf-shape-add-point
               sf-shape-enable-fill
               sf-shape-enable-outline
               sf-shape-set-outline-thickness
               sf-shape-get-outline-thickness
               sf-shape-get-points-count
               sf-shape-get-point-position
-              sf-shape-get-point-outline-color
+              ;sf-shape-get-point-outline-color
               sf-shape-set-point-position
-              sf-shape-set-point-color
-              sf-shape-set-point-outline-color
-              |#
+              ;sf-shape-set-point-color
+              ;sf-shape-set-point-outline-color
+              
 
           ;; etc.
 
