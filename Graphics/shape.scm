@@ -9,8 +9,9 @@
   (let ((crt-line
           (foreign-lambda* (c-pointer sfShape)
             ((float p1x) (float p1y) (float p2x) (float p2y) (float thickness)
-             (char cr) (char cg) (char cb) (char ca) (float outline) (char outr)
-             (char outg) (char outb) (char outa))
+             (char cr) (char cg) (char cb) (char ca)
+             (float outline)
+             (char outr) (char outg) (char outb) (char outa))
             "sfColor clr = { cr, cg, cb, ca };
              sfColor outclr = { outr, outg, outb, outa };
              sfShape* shp = sfShape_CreateLine(p1x, p1y, p2x, p2y,
@@ -24,8 +25,47 @@
                 (vector-ref ovec 0) (vector-ref ovec 1)
                 (vector-ref ovec 2) (vector-ref ovec 3)))))
 
-#|sf-shape-create-rectangle
-sf-shape-create-circle|#
+(define sf-shape-create-rectangle
+  (let ((crt-rect
+          (foreign-lambda* (c-pointer sfShape)
+            ((float left) (float top) (float width) (float height)
+             (char cr) (char cg) (char cb) (char ca)
+             (float outline)
+             (char outr) (char outg) (char outb) (char outa))
+            "sfColor clr = { cr, cg, cb, ca };
+             sfColor outclr = { outr, outg, outb, outa };
+             sfShape* shp = sfShape_CreateRectangle(left, top, width, height,
+                                                    clr, outline, outclr);
+             C_return(shp);")))
+    (lambda (left top width height cvec outline ovec)
+      (crt-rect left top width height
+                (vector-ref cvec 0) (vector-ref cvec 1)
+                (vector-ref cvec 2) (vector-ref cvec 3)
+                outline
+                (vector-ref ovec 0) (vector-ref ovec 1)
+                (vector-ref ovec 2) (vector-ref ovec 3)))))
+
+(define sf-shape-create-circle
+  (let ((crt-circle
+          (foreign-lambda* (c-pointer sfShape)
+            ((float x) (float y) (float radius)
+             (char cr) (char cg) (char cb) (char ca)
+             (float outline)
+             (char outr) (char outg) (char outb) (char outa))
+            "sfColor clr = { cr, cg, cb, ca };
+             sfColor outclr = { outr, outg, outb, outa };
+             sfShape* shp = sfShape_CreateCircle(x, y, radius,
+                                                 clr, outline, outclr);
+             C_return(shp);")))
+    (lambda (x y radius cvec outline ovec)
+      (crt-circle x y radius
+                (vector-ref cvec 0) (vector-ref cvec 1)
+                (vector-ref cvec 2) (vector-ref cvec 3)
+                outline
+                (vector-ref ovec 0) (vector-ref ovec 1)
+                (vector-ref ovec 2) (vector-ref ovec 3)))))
+            
+
 (define sf-shape-copy
   (foreign-lambda (c-pointer sfShape)
     "sfShape_Copy" (c-pointer sfShape)))

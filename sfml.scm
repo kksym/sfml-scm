@@ -232,8 +232,8 @@
              
               sf-shape-create
               sf-shape-create-line
-              ;sf-shape-create-rectangle
-              ;sf-shape-create-circle
+              sf-shape-create-rectangle
+              sf-shape-create-circle
               sf-shape-copy
               sf-shape-destroy
               sf-shape-set-x
